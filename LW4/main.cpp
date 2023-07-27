@@ -1,11 +1,13 @@
-#include<iostream>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "class.h"
 
 using namespace std;
 
 int main() {
 	int size;
-	cout << "Enter vec1 size: ";
+	cout << "Enter Vec1 size: ";
 	cin >> size;
 
 	BoolVector vec1(size);
@@ -15,9 +17,10 @@ int main() {
 		vec1.append(rand() % 2);
 	}
 
-	cout << "Vec1: " << vec1 << endl;
+	cout << "Vec1: ";
+	vec1.printVector();
 
-	cout << "Enter elements of vec2. If you want to stop enter -1: " << endl;
+	cout << endl << "Enter elements of Vec2. If you want to stop enter -1: " << endl;
 	int element;
 
 	BoolVector vec2;
@@ -32,14 +35,17 @@ int main() {
 		vec2.append((bool)element);
 	}
 
-	cout << "Vec1: " << vec1 << endl;
-	cout << "Vec2: " << vec2 << endl;
+	cout << endl << "Vec2: ";
+	vec2.printVector();
 
-	BoolVector vec3 = ~vec1;
-	cout << "~Vec1: " << vec3 << endl;
+	BoolVector complement_vec1 = ~vec1;
+	cout << "~Vec1: ";
+	complement_vec1.printVector();
 
-	vec3 &= vec2;
-	cout << "Vec3 == ~Vec1 & Vec2: " << vec3 << endl;
+	BoolVector vec3 = complement_vec1 & vec2;
+	cout << endl << "Vec3 == ~Vec1 & Vec2: ";
+	vec3.printVector();
+
 	cout << "Weight of Vec3: " << vec3.weight() << endl;
 
 	return 0;

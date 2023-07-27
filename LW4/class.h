@@ -1,30 +1,25 @@
-#include<iostream>
-
-using namespace std;
+#include <iostream>
 
 class BoolVector {
-private:
-	int _size = 0;
-	int _capacity = 1;
+	int size;
 	bool* memory;
 
 	void resize();
 
 public:
-	BoolVector(int size) : _size(0), _capacity(size * 2), memory(new bool[size]) {}
-	BoolVector() : _size(0), _capacity(1), memory(new bool[_capacity]) {}
+	BoolVector(const int size);
+	BoolVector() : size(0), memory(nullptr) {};
 	BoolVector(const BoolVector& vec);
 
-	~BoolVector() { delete[] memory; }
+	~BoolVector() { delete[] memory; };
 
-	friend std::ostream& operator<<(std::ostream& out, const BoolVector& vec);
+	void printVector() const;
 
-	int getSize() const { return _size; }
-	int getCapacity() const { return _capacity;}
+	int getSize() const { return size; };
 
-	void append(bool value);
+	void append(const bool value);
 	int weight() const;
 
-	BoolVector& operator~();
-	BoolVector& operator&=(const BoolVector& vec);
+	BoolVector operator~();
+	BoolVector operator&(const BoolVector& vec);
 };

@@ -2,85 +2,90 @@
 
 void BoolVector::resize()
 {
+	int new_size = size + 1;
 	bool* temp = memory;
-	int size = _capacity;
-	_capacity *= 2;
-	memory = new bool[_capacity];
+	memory = new bool[new_size];
 
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		memory[i] = temp[i];
 	}
 
 	delete[] temp;
 }
 
+BoolVector::BoolVector(const int size) : size(0), memory(new bool[size])
+{
+	for (int i = 0; i < size; i++)
+		memory[i] = false;
+}
+
 BoolVector::BoolVector(const BoolVector& vec)
 {
-	_size = vec._size;
-	_capacity = vec._capacity;
-
-	memory = new bool[_capacity];
-	for (size_t i = 0; i < _size; i++) {
+	size = vec.size;
+	memory = new bool[size];
+	for (int i = 0; i < size; i++) {
 		memory[i] = vec.memory[i];
 	}
 }
 
-void BoolVector::append(bool value)
+void BoolVector::printVector() const
 {
-	if (_size >= _capacity)
-		resize();
-	memory[_size++] = value;
+	for (int i = 0; i < size; i++) {
+		std::cout << memory[i] << " ";
+	}
+	std::cout << std::endl;
+}
+
+void BoolVector::append(const bool value)
+{
+	resize();
+	memory[size++] = value;
 }
 
 int BoolVector::weight() const
 {
 	int w = 0;
-	for (size_t i = 0; i < _size; i++) {
+	for (int i = 0; i < size; i++) {
 		if (memory[i]) w++;
 	}
 	return w;
 }
 
-BoolVector& BoolVector::operator~()
+BoolVector BoolVector::operator~()
 {
-	for (size_t i = 0; i < _size; i++) {
-		memory[i] = !memory[i];
+	BoolVector complement(*this);
+	for (int i = 0; i < size; i++) {
+		complement.memory[i] = !complement.memory[i];
 	}
-	return *this;
+	return complement;
 }
 
-BoolVector& BoolVector::operator&=(const BoolVector& vec)
+BoolVector BoolVector::operator&(const BoolVector& vec)
 {
-	size_t i = 0;
-	while (i < _size && i < vec._size) {
-		memory[i] = memory[i] && vec.memory[i];
+	int max = (size > vec.size) ? size : vec.size;
+
+	BoolVector conjunction(max);
+	int i = 0;
+
+	for (i; i < size && i < vec.size; i++) {
+		conjunction.memory[i] = memory[i] && vec.memory[i];
+	}
+
+	for (i; i < max; i++) {
+		conjunction.memory[i] = false;
+	}
+
+	/*while (i < size && i < vec.size) {
+		conjunction.memory[i] = memory[i] && vec.memory[i];
 		i++;
-	}
+	}*/
 
-	while (i < _size) {
-		memory[i] = false;
+	/*while (i < max) {
+		conjunction.memory[i] = false;
 		i++;
-	}
-	_size = i;
+	}*/
 
-	return *this;
+	conjunction.size = i;
+
+	return conjunction;
 }
-
-std::ostream& operator<<(std::ostream& out, const BoolVector& vec)
-{
-	for (size_t i = 0; i < vec._size; i++) {
-		out << vec.memory[i] << " ";
-	}
-
-	return out;
-}
-
-/*BoolVector(initializer_list<bool> list) {
-	int _index = 0;
-	_size = list.size();
-	_capacity = _size * 2;
-	memory = new bool[_capacity];
-	for (auto i : list) {
-		memory[_index++] = i;
-	}
-}*/
